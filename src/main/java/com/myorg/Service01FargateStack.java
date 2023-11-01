@@ -37,15 +37,15 @@ public class Service01FargateStack extends Stack {
         ApplicationLoadBalancedFargateService service01 = ApplicationLoadBalancedFargateService.Builder.create(this, "ALB01")
                 .serviceName("service-fiap")
                 .cluster(cluster)
-                .cpu(256) // 512
-                .memoryLimitMiB(512) // 1024
+                .cpu(256) // 512 256
+                .memoryLimitMiB(512) // 1024 512
                 .desiredCount(1)
                 .listenerPort(8080)
                 .assignPublicIp(true)
                 .taskImageOptions(
                         ApplicationLoadBalancedTaskImageOptions.builder()
                                 .containerName("aws_fiap")
-                                .image(ContainerImage.fromRegistry("510327137634.dkr.ecr.us-east-1.amazonaws.com/spring-ecs:1.2.0"))
+                                .image(ContainerImage.fromRegistry("739128619512.dkr.ecr.us-east-1.amazonaws.com/fiap-paquimetro:1.0.0"))
                                 .containerPort(8080)
                                 .logDriver(LogDriver.awsLogs(AwsLogDriverProps.builder()
                                         .logGroup(LogGroup.Builder.create(this, "ServiceFiapLogGroup")
@@ -61,7 +61,7 @@ public class Service01FargateStack extends Stack {
 
         //Configuração do Health Check no TargetGroup
         service01.getTargetGroup().configureHealthCheck(new HealthCheck.Builder()
-                .path("/actuator/health")
+                .path("/fiap-paquimetro-grupo01/actuator/health")
                 .port("8080")
                 .healthyHttpCodes("200")
                 .build());
